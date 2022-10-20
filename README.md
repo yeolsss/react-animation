@@ -32,3 +32,45 @@ const myVars = {
 
 <Box variants={myVars} initial="start" animate="end" />
 ```
+
+### 2. Motion Value
+
+    animation의 수치를 트래킹 할 수 있다.
+
+```javascript
+const x = useMotionValue(0);
+  useEffect(() => {
+    x.onChange(() => console.log(x.get()));
+  }, [x]);
+
+  ...
+
+<Box style={{ x }} drag="x" dragSnapToOrigin></Box>
+
+```
+
+#### 2-1. useTransForm()
+
+    x의 값과 제한값(ex: x의 좌표값(?) 등)을 useTransform에서 받고
+    출력값을 받는다.
+
+```javascript
+  const x = useMotionValue(0);
+  const scale = useTransform(x, [-800, 0, 800], [2, 1, 0]);
+
+  ...
+
+
+      <Box style={{ x, scale }} drag="x" dragSnapToOrigin></Box>
+
+-------------------
+
+  const x = useMotionValue(0);
+  const rotateZ = useTransform(x, [-800, 800], [-360, 360]);
+
+  ...
+
+      <Box style={{ x, rotateZ }} drag="x" dragSnapToOrigin></Box>
+
+
+```
