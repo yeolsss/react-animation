@@ -15,44 +15,71 @@ const Box = styled(motion.div)`
   height: 200px;
   background-color: rgba(255, 255, 255, 1);
   border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
   position: absolute;
   top: 100px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const boxVariants: Variants = {
-  initial: {
+interface ICustomProps {
+  back: boolean;
+}
+const box: Variants = {
+  initial: ({ back }: ICustomProps) => ({
+    x: back ? -500 : 500,
     opacity: 0,
     scale: 0,
-  },
-  visible: {
+  }),
+  animate: {
     opacity: 1,
     scale: 1,
-    rotateZ: 360,
+    x: 0,
+    transition: {
+      duration: 0.5,
+    },
   },
-  exit: {
+  exit: ({ back }: ICustomProps) => ({
+    x: back ? 500 : -500,
     opacity: 0,
     scale: 0,
-    y: 60,
-  },
+    transition: {
+      duration: 0.5,
+    },
+  }),
 };
 
 function App() {
-  const [showing, setShowing] = useState(false);
-  const toggleShowing = () => setShowing((prev) => !prev);
+  const [showing, setShowing] = useState(1);
+  const [back, setBack] = useState(false);
+  const onNextShowing = () => {
+    setBack(false);
+    setShowing((prev) => (prev === 10 ? 10 : prev + 1));
+  };
+
+  const onPrevShowing = () => {
+    setBack(true);
+    setShowing((prev) => (prev === 1 ? 1 : prev - 1));
+  };
+
   return (
     <Wrapper>
-      <button onClick={toggleShowing}>Click</button>
-      <AnimatePresence>
-        {showing ? (
-          <Box
-            variants={boxVariants}
-            initial="initial"
-            animate="visible"
-            exit="exit"
-          />
-        ) : null}
+      <AnimatePresence mode="wait" custom={{ back }}>
+        <Box
+          custom={{ back }}
+          variants={box}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          key={showing}
+        >
+          {showing}
+        </Box>
       </AnimatePresence>
+      <button onClick={onPrevShowing}>prev</button>
+      <button onClick={onNextShowing}>next</button>
     </Wrapper>
   );
 }
