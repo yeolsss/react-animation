@@ -74,3 +74,50 @@ const x = useMotionValue(0);
 
 
 ```
+
+#### 2-2 AnimatePresence
+
+    react components를 숨기고 보여질때 animation을 적용 할 수 있게 해준다.
+
+```javascript
+import { AnimatePresence, motion, Variants } from 'framer-motion';
+
+...
+
+const boxVariants: Variants = {
+  initial: {
+    opacity: 0,
+    scale: 0,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    rotateZ: 360,
+  },
+  exit: {
+    opacity: 0,
+    scale: 0,
+    y: 60,
+  },
+};
+
+function App() {
+  const [showing, setShowing] = useState(false);
+  const toggleShowing = () => setShowing((prev) => !prev);
+  return (
+    <Wrapper>
+      <button onClick={toggleShowing}>Click</button>
+      <AnimatePresence>
+        {showing ? (
+          <Box
+            variants={boxVariants}
+            initial="initial"
+            animate="visible"
+            exit="exit"
+          />
+        ) : null}
+      </AnimatePresence>
+    </Wrapper>
+  );
+}
+```
